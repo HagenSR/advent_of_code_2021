@@ -8,6 +8,7 @@ fn main() {
     count_sliding();
 }
 
+// count the number of times there is an increase in a sliding average of three
 fn count_sliding(){
     let filename = "src/data.txt";
     // Open the file in read-only mode (ignoring errors).
@@ -33,6 +34,7 @@ fn count_sliding(){
 
 }
 
+// Count the number of times there is an increase in the numbers
 fn count_diff(){
     let filename = "src/data.txt";
     // Open the file in read-only mode (ignoring errors).

@@ -10,12 +10,14 @@ fn main() {
     second(filename);
 }
 
+// figure out most common and least common in each column, multiply together
 fn first(filename: &str) {
     let gamma_res: [i32; 12] = read_file(filename);
     let res = binary_array_to_int_epsilon(gamma_res);
     println!("{}", res[0] * res[1])
 }
 
+// Some other garbage idk
 fn second(filename: &str) {
     let file = File::open(filename).unwrap();
     let reader = BufReader::new(file);

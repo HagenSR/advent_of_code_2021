@@ -8,6 +8,7 @@ fn main() {
     first();
 }
 
+// Figure out which bingo board wins first and last
 fn first(){
     let filename = "src/data.txt";
     // Open the file in read-only mode (ignoring errors).
