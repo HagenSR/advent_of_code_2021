@@ -10,7 +10,7 @@ fn first() {
     let filename = "src/data.txt";
     let contents = fs::read_to_string(filename)
         .expect("Something went wrong reading the file");
-    let mut state: Vec<i32> = contents.split(",").map(|fish| fish.trim().parse().unwrap()).collect();
+    let mut state: Vec<i8> = contents.split(",").map(|fish| fish.trim().parse().unwrap()).collect();
 
     // Laternfish in the ocean reproduce every 6 days. A new laternfish reproduces after 8 days. 
     //How many lanternfish are there after 80 and 256 days?
@@ -25,10 +25,12 @@ fn first() {
                 state[fish] -= 1;
             }
         }
-        for new in 0..new_fish {
+        for _new in 0..new_fish {
             state.push(8);
         }
         if i == 79 {
+            println!("There are {} Fish after {} days", state.len(), i);
+        }else if i % 10 == 9 || i == 15 || i == 31 || i == 63 || i == 127 {
             println!("There are {} Fish after {} days", state.len(), i);
         }
     }
