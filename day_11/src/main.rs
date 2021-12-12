@@ -48,7 +48,7 @@ fn second(map: &mut Vec<Vec<i32>>) {
         }
 
         if zero_check{
-            //Answer is off by 100 for some reason?
+            // Add 100 to final results because 100 ticks have already run
             println!("All jellyfish flashed on turn {}", i+100);
             break;
         }
