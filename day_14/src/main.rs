@@ -9,8 +9,8 @@ fn main() {
     let file = File::open(filename).unwrap();
     let reader = BufReader::new(file);
     let mut flip_bool = false;
-    let mut initial_template: Vec<String> = Vec::new();
-    let mut instructions: Vec<(String, String, String)> = Vec::new();
+    let mut initial_template: Vec<char> = Vec::new();
+    let mut instructions: Vec<(char, char, char)> = Vec::new();
     // Read the file line by line using the lines() iterator from std::io::BufRead.
     for line in reader.lines() {
         let tmp = line.unwrap();
@@ -22,30 +22,30 @@ fn main() {
             initial_template = tmp
                 .split("")
                 .filter(|f| *f != "")
-                .map(|f| f.to_owned())
-                .collect::<Vec<String>>()
+                .map(|f| f.chars().next().unwrap())
+                .collect::<Vec<char>>()
                 .to_owned();
         } else {
             let mut split = tmp.split("->");
             let mut group = split.next().unwrap().split("");
             instructions.push((
-                group.nth(1).unwrap().to_owned(),
-                group.next().unwrap().to_owned(),
-                split.next().unwrap().trim().to_owned(),
+                group.nth(1).unwrap().chars().next().unwrap(),
+                group.next().unwrap().chars().next().unwrap(),
+                split.next().unwrap().chars().next().unwrap(),
             ));
         }
     }
 
-    let vec : Vec<String> = perform_instructions(&instructions, &initial_template, 10);
+    let vec : Vec<char> = perform_instructions(&instructions, &initial_template, 10);
     count_occurances(vec);
 
     // Runs in exponential time, oh well
-    let vec : Vec<String> = perform_instructions(&instructions, &initial_template, 40);
+    let vec : Vec<char> = perform_instructions(&instructions, &initial_template, 40);
     count_occurances(vec);
 }
 
-fn count_occurances(vec : Vec<String>){
-    let mut map : BTreeMap<String, i32> = BTreeMap::new();
+fn count_occurances(vec : Vec<char>){
+    let mut map : BTreeMap<char, i32> = BTreeMap::new();
     for char in vec{
         let pointer = map.entry(char).or_insert(0);
         *pointer += 1;
@@ -58,14 +58,14 @@ fn count_occurances(vec : Vec<String>){
 }
 
 fn perform_instructions(
-    instructions: &Vec<(String, String, String)>,
-    initial_template: &Vec<String>,
+    instructions: &Vec<(char, char, char)>,
+    initial_template: &Vec<char>,
     ending_index: i32
-) -> Vec<String> {
+) -> Vec<char> {
     let start = SystemTime::now();
-    let mut vec: Vec<String> = initial_template.clone();
+    let mut vec: Vec<char> = initial_template.clone();
     for repeat in 0..ending_index {
-        let mut new_vec: Vec<String> = vec.clone();
+        let mut new_vec: Vec<char> = vec.clone();
         let mut inserts_before = 0;
         for index in 0..vec.len() - 1 {
             for instruction in instructions.iter() {
