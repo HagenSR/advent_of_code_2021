@@ -26,13 +26,13 @@ fn main() {
                 .collect::<Vec<char>>()
                 .to_owned();
         } else {
-            let mut split = tmp.split("->");
+            let mut split  = tmp.split("->");
             let mut group = split.next().unwrap().split("");
             instructions.push((
-                group.nth(1).unwrap().chars().next().unwrap(),
-                group.next().unwrap().chars().next().unwrap(),
-                split.next().unwrap().chars().next().unwrap(),
-            ));
+                 group.nth(1).unwrap().chars().next().unwrap(),
+                 group.next().unwrap().chars().next().unwrap(),
+                 split.nth(0).unwrap().chars().nth(1).unwrap(),
+             ));
         }
     }
 
