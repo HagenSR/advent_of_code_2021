@@ -11,4 +11,11 @@ Also, I'm making a crate for every day, which is probably terrible lol
 ### Still need to complete
 
 day 8 part 2
+
 day 12
+
+day 14 part 2
+
+day 15
+
+
