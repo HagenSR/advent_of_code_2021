@@ -9,35 +9,39 @@ fn main() {
 
 fn count_version_numbers(binary: &str) {
     let mut count = 0;
-    let mut get_version_number = true;
-    let mut char_index = 0;
-    let packet_information = get_packet_information(binary);
-    while char_index < binary.len() {
-        if get_version_number {
-            let substring = substring(binary, char_index, 3);
-            count += binary_string_to_int(substring);
-            get_version_number = false;
-            char_index += 3;
-        } else {
-            if char_list.nth(char_index).unwrap() == '0' {
-                get_version_number = true;
+    let mut packet_information: Vec<(i32, i32, i32, i32, i32)> = Vec::new();
+    packet_information.push(get_packet_information(binary, 0));
+    let mut cur_packet = packet_information.last().unwrap().clone();
+    while cur_packet.4 < binary.len() as i32 {
+        if cur_packet.2 == 1 {
+            for i in 0..cur_packet.3 {
+                if substring(binary, cur_packet.4 as usize, 1) == "0" {
+                    println!("Value Packet");
+                } else {
+                    packet_information.push(get_packet_information(binary, (cur_packet.4 + (i * 11)) as usize))
+                }
             }
-            char_index += 4;
+        } else {
+            panic!();
         }
+        cur_packet = packet_information.last().unwrap().clone();
     }
 }
 
-fn get_packet_information(binary_string: &str) -> (i32, i32, i32, i32) {
-    let version = binary_string_to_int(substring(binary_string, 0, 3));
-    let id = binary_string_to_int(substring(binary_string, 2, 3));
-    let length_id = binary_string_to_int(substring(binary_string, 5, 3));
+fn get_packet_information(binary_string: &str, start_index: usize) -> (i32, i32, i32, i32, i32) {
+    let version = binary_string_to_int(substring(binary_string, start_index, 3));
+    let id = binary_string_to_int(substring(binary_string, start_index + 2, 3));
+    let length_id = binary_string_to_int(substring(binary_string, start_index + 5, 3));
     let mut length_packet = 0;
+    let char_index: i32;
     if length_id == 0 {
-        length_packet = binary_string_to_int(substring(binary_string, 8, 15));
+        length_packet = binary_string_to_int(substring(binary_string, start_index + 8, 15));
+        char_index = (start_index + 8 + 15) as i32;
     } else {
         length_packet = binary_string_to_int(substring(binary_string, 8, 11));
+        char_index = (start_index + 8 + 11) as i32;
     }
-    return (version, id, length_id, length_packet);
+    return (version, id, length_id, length_packet, char_index);
 }
 
 fn convert_hex_to_binary(contents: &str) -> String {
@@ -68,7 +72,7 @@ fn convert_hex_to_binary(contents: &str) -> String {
 }
 
 fn chars_to_string(chars: Vec<char>) -> String {
-    let rtn = String::new();
+    let mut rtn = String::new();
     for char in chars {
         rtn += &char.to_string();
     }
