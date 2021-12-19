@@ -1,7 +1,10 @@
 use std::{collections::{BTreeMap, BTreeSet}, fs};
+use std::iter::FromIterator;
+use std::fs::File;
+use std::io::Write;
 
 fn main() {
-    let filename = "src/data/datasmall.txt";
+    let filename = "src/data/data.txt";
     let contents = fs::read_to_string(filename).expect("Something went wrong reading the file");
 
     // Collect file into 2d array
@@ -33,7 +36,7 @@ fn djikstras(map: &Vec<Vec<i32>>) {
     let mut vertex_set: BTreeSet<(usize, usize)> = BTreeSet::new();
     for i in 0..map.len() {
         for j in 0..map.len() {
-            distance.insert((i, j), 1000);
+            distance.insert((i, j), i32::MAX);
             vertex_set.insert((i, j));
         }
     }
@@ -41,9 +44,6 @@ fn djikstras(map: &Vec<Vec<i32>>) {
     let mut left = vertex_set.len();
     while left != 0 {
         let vert: (usize, usize) = vert_get_smallest(&distance, &mut vertex_set);
-        if vert == (map.len() - 1, map[0].len() - 1){
-            break;
-        }
         for i in -1..2i32 {
             for j in -1..2i32 {
                 if i == -1 && j == -1
@@ -80,7 +80,7 @@ fn djikstras(map: &Vec<Vec<i32>>) {
             }
         }
         left = vertex_set.len();
-        if left % 1000 == 999{
+        if left % 5001 == 5000{
             println!("{}", left);
         }
     }
@@ -100,7 +100,8 @@ fn djikstras(map: &Vec<Vec<i32>>) {
     println!(
         "Dist: {}",
         distance.get(&(map.len() - 1, map[0].len() - 1)).unwrap()
-    )
+    );
+    write_file(distance);
 }
 
 
@@ -135,4 +136,17 @@ fn make_bigger_map(map: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
         }
     }
     return bigger_map;
+}
+
+fn write_file(dist : BTreeMap<(usize, usize), i32>) {
+    // Create a temporary file.
+
+    // Open a file in write-only (ignoring errors).
+    // This creates the file if it does not exist (and empty the file if it exists).
+    let mut file = File::create("distout.txt").unwrap();
+
+    // Write a &str in the file (ignoring the result).
+    for keyval in dist{
+        writeln!(&mut file, "{},{} -> {}", keyval.0.0, keyval.0.1, keyval.1).unwrap();
+    }
 }
