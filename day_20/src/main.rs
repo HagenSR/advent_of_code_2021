@@ -23,13 +23,12 @@ fn main() {
 
 fn first(map: Vec<Vec<&str>>, code: &Vec<&str>) {
     let mut local_map = map.clone();
-    let mut flip_void = true;
+    let mut flip_void = false;
     for _x in 0..2 {
-        pad_map(&mut local_map, flip_void);
         let mut new_map = local_map.clone();
-        for i in 1..local_map.len() - 1 {
-            for j in 1..local_map[0].len() - 1 {
-                let matrix_string = get_matrix_string_around(&local_map, i as i32, j as i32);
+        for i in 0..local_map.len() {
+            for j in 0..local_map[0].len()  {
+                let matrix_string = get_matrix_string_around(&local_map, i as i32, j as i32, flip_void);
                 let value = string_to_binary_to_number(&matrix_string);
                 new_map[i][j] = code[value as usize];
             }
@@ -55,11 +54,22 @@ fn count_pound_occurances(map: &Vec<Vec<&str>>) -> i32 {
     return count;
 }
 
-fn get_matrix_string_around(map: &Vec<Vec<&str>>, i: i32, j: i32) -> String {
+fn get_matrix_string_around(map: &Vec<Vec<&str>>, i: i32, j: i32, flip_void : bool) -> String {
     let mut rtn: String = String::new();
     for x in -1i32..2 {
         for y in -1..2 {
-            rtn += map[(i + x) as usize][(y + j) as usize].clone();
+            let xi = x + i;
+            let yj = y + j;
+            if xi >= 0 && yj >= 0  && xi < map.len() as i32 && yj < map[0].len() as i32{
+                rtn += map[(i + x) as usize][(y + j) as usize].clone();
+            }else{
+                if flip_void{
+                    rtn += "#";
+                }else{
+                    rtn += ".";
+                }
+            }
+           
         }
     }
     return rtn;
