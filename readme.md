@@ -16,6 +16,20 @@ day 12
 
 day 14 part 2
 
-day 15
+day 16
+
+day 18
+
+day 19
+
+day 20 part 2
+
+day 21 part 2
+
+day 22
+
+day 23
+
+day 24
 
 
