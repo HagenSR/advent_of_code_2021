@@ -39,7 +39,7 @@ impl PartialEq for Instruction {
 impl Eq for Instruction {}
 
 fn main() {
-    let filename = "src/data/datasmall.txt";
+    let filename = "src/data/datamed.txt";
     let contents = fs::read_to_string(filename).expect("Something went wrong reading the file");
     let split_new_line: Vec<&str> = contents.split("\n").collect();
     let mut instructions: Vec<Instruction> = Vec::new();
@@ -78,9 +78,9 @@ fn first(instructions: Vec<Instruction>) {
     for instruct in instructions.iter() {
         let mut new_intersections: Vec<Instruction> = previously_calculated_instructions.clone();
         for prev_instruct in previously_calculated_instructions.iter_mut() {
-            if determine_colision(prev_instruct, instruct) && (prev_instruct.state != false && instruct.state != false) {
+            if determine_colision(prev_instruct, instruct){
                 let overlap = return_overlap(instruct, &prev_instruct);
-                if !new_intersections.contains(&overlap) {
+                if !new_intersections.contains(&overlap){
                     new_intersections.push(overlap.clone());
                 }
             }
@@ -102,8 +102,8 @@ fn determine_colision(a: &Instruction, b: &Instruction) -> bool {
         && (a.z_start <= b.z_end && a.z_end >= b.z_start);
 }
 
-fn determine_final_area(list: Vec<Instruction>) -> i32 {
-    let mut area = 0;
+fn determine_final_area(list: Vec<Instruction>) -> f64 {
+    let mut area = 0.0;
     for instruction in list {
         let tmp = calculate_area(&instruction);
         if instruction.state {
@@ -123,7 +123,7 @@ fn return_overlap(a: &Instruction, b: &Instruction) -> Instruction {
     let z_start = a.z_start.max(b.z_start);
     let z_end = a.z_end.min(b.z_end);
     return Instruction {
-        state: !(a.state && b.state),
+        state: return_new_state(a.state, b.state),
         x_start,
         x_end,
         y_start,
@@ -133,8 +133,18 @@ fn return_overlap(a: &Instruction, b: &Instruction) -> Instruction {
     };
 }
 
-fn calculate_area(instruct: &Instruction) -> i32 {
-    return (instruct.x_end - instruct.x_start)
-        * (instruct.z_end - instruct.z_start)
-        * (instruct.y_end - instruct.y_start);
+fn return_new_state(state_a : bool, state_b : bool) -> bool {
+    if state_a == state_b {
+        return !state_a
+    }else if state_a && !state_b{
+        return true;
+    }else{
+        return false;
+    }
+}
+
+fn calculate_area(instruct: &Instruction) -> f64 {
+    return (instruct.x_end as f64 - instruct.x_start as f64).abs()
+        * (instruct.z_end as f64 - instruct.z_start as f64).abs()
+        * (instruct.y_end as f64 - instruct.y_start as f64).abs();
 }
